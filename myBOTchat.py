@@ -5,6 +5,7 @@ from telebot import types
 TOKEN = "5958778313:AAGUgvbS-3hOnkoNYnRhawBO04vWBlUVImk"
 first_number = 0
 last_number = 0
+start_point = "rus"
 bot = telebot.TeleBot(TOKEN)
 
 
@@ -25,14 +26,18 @@ def callback_worker(call):
 		if call.data == "start":
 			# bot.send_message(call.message.chat.id, "Выберите валюту с которой нужно перевести")
 			keyboard = types.InlineKeyboardMarkup()
-			rus_start = types.InlineKeyboardButton(text="RUS", callback_data="rus")
-			keyboard.add(rus_start)
-			eu_start = types.InlineKeyboardButton(text="EURO", callback_data="euro")
-			keyboard.add(eu_start)
-			dollars_start = types.InlineKeyboardButton(text="DOLLARS", callback_data="dollars")
-			keyboard.add(dollars_start)
+			rub_start_key = types.InlineKeyboardButton(text="RUB", callback_data="rub")
+			keyboard.add(rub_start_key)
+			eu_start_key = types.InlineKeyboardButton(text="EURO", callback_data="euro")
+			keyboard.add(eu_start_key)
+			dollars_start_key = types.InlineKeyboardButton(text="DOLLARS", callback_data="dollars")
+			keyboard.add(dollars_start_key)
 
 			bot.send_message(call.message.chat.id, text="Выберите валюту с которой нужно перевести.", reply_markup=keyboard)
+			bot.register_next_step_handler(call.message, start_choose)
+			# if call.data == "rus":
+			# 	bot.send_message(message.from_user.id, "")
+			# 	bot.register_next_step_handler(call.message, start_rus)
 			# bot.register_next_step_handler(call.message, start)
 		elif call.data == "help":
 			# bot.send_message(call.message.chat.id, "Я бот-конвертер, провожу обмен денежной единицы одной страны на деньги другой по текущему курсу. Доступны: евро, доллары и рубли.")
@@ -48,7 +53,27 @@ def callback_worker(call):
 	except KeyError:
 		pass
 
+def start_choose(call):
+	try:
+		if call.data == "rub":
+			global start_point
+			start_point = call.text
+			bot.register_next_step_handler(call.message, rub_start)
+		elif call.data == "euro":
+			bot.register_next_step_handler(call.message, eu_start)
+		elif call.data == "dollars":
+			bot.register_next_step_handler(call.message, dollars_start)
+	except KeyError:
+		pass
 
+def rub_start(message):
+	bot.send_message(message.from_user.id, "Введите rub")
+
+def eu_start(message):
+	bot.send_message(message.from_user.id, "Введите euro")
+
+def dollars_start(message):
+	bot.send_message(message.from_user.id, "Введите dollars")
 # def callback_worker(call):
 # 	try:
 # 		if call.data == "start":
