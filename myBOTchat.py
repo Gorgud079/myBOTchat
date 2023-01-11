@@ -6,7 +6,7 @@ import json
 # 5958778313:AAGUgvbS-3hOnkoNYnRhawBO04vWBlUVImk
 TOKEN = "5958778313:AAGUgvbS-3hOnkoNYnRhawBO04vWBlUVImk"
 
-start_point = "fff"
+start_point = " "
 last_point = " "
 bot = telebot.TeleBot(TOKEN)
 try:
@@ -32,7 +32,7 @@ try:
 				keyboard = types.InlineKeyboardMarkup()
 				rub_start_key = types.InlineKeyboardButton(text="🇷🇺 RUB 🇷🇺", callback_data="RUB")
 				keyboard.add(rub_start_key)
-				eu_start_key = types.InlineKeyboardButton(text="🇪🇺 EURO 🇪🇺", callback_data="EUR")
+				eu_start_key = types.InlineKeyboardButton(text="🇪🇺 EUR 🇪🇺", callback_data="EUR")
 				keyboard.add(eu_start_key)
 				dollars_start_key = types.InlineKeyboardButton(text="🇺🇲 USD 🇺🇲", callback_data="USD")
 				keyboard.add(dollars_start_key)
@@ -65,7 +65,7 @@ try:
 				keyboard = types.InlineKeyboardMarkup()
 				rub_last_key = types.InlineKeyboardButton(text="🇷🇺RUB 🇷🇺", callback_data="rub_last")
 				keyboard.add(rub_last_key)
-				eu_last_key = types.InlineKeyboardButton(text="🇪🇺 EURO 🇪🇺", callback_data="euro_last")
+				eu_last_key = types.InlineKeyboardButton(text="🇪🇺 EUR 🇪🇺", callback_data="euro_last")
 				keyboard.add(eu_last_key)
 				dollars_last_key = types.InlineKeyboardButton(text="🇺🇲 USD 🇺🇲", callback_data="dollars_last")
 				keyboard.add(dollars_last_key)
@@ -101,6 +101,5 @@ try:
 
 except requests.exceptions.ReadTimeout:
 	print("Переподключение к серверам заново")
-
 
 bot.polling(none_stop= True)
