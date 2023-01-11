@@ -92,10 +92,10 @@ try:
 			amount = message.text
 			r = requests.get(f"https://min-api.cryptocompare.com/data/price?fsym={start_point}&tsyms={last_point}")
 			total_base = json.loads(r.content)[last_point]
-			text = f"Цена {amount} {start_point} в {last_point} - {total_base * int(amount)} {last_point}\nДля того чтобы начать сначала нажмите - /start"
+			text = f"Цена {amount} {start_point} в {last_point} - {total_base * int(amount)} {last_point}\n\nДля того чтобы начать сначала нажмите - /start"
 			bot.send_message(message.chat.id, text)
 		except KeyError or ValueError:
-			bot.send_message(message.chat.id, "Введите пожалуйста число\nИли нажмите на эту ссылку для того чтобы начать заново")
+			bot.send_message(message.chat.id, "Введите число\n\nИли нажмите на эту ссылку чтобы начать заново (если не выбрали валюты) - /start")
 		except requests.exceptions.ReadTimeout:
 			print("\n Переподключение к серверам \n")
 
