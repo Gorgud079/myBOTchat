@@ -2,6 +2,9 @@ import telebot
 from telebot import types
 import requests
 import json
+import socket
+
+
 
 # 5958778313:AAGUgvbS-3hOnkoNYnRhawBO04vWBlUVImk
 TOKEN = "5958778313:AAGUgvbS-3hOnkoNYnRhawBO04vWBlUVImk"
@@ -75,7 +78,7 @@ try:
 
 	def choose(call):
 		if call.data == "rub_last" or call.data == "euro_last" or call.data == "dollars_last":
-			bot.send_message(call.message.chat.id, "③ Введите сумму")
+			# bot.send_message(call.message.chat.id, f"③ Вы выбрали поменять валюту {start_point} в валюту {last_point}\n Введите сумму")
 			global last_point
 			if call.data == "rub_last":
 				last_point = "RUB"
@@ -84,22 +87,26 @@ try:
 			elif call.data == "dollars_last":
 				last_point = "USD"
 			# print(last_point)
+			bot.send_message(call.message.chat.id, f"Вы выбрали поменять валюту {start_point} в валюту {last_point}.\nЕсли ошиблись - нажмите /start\n\n③ Введите сумму")
 			return last_point
 
 	@bot.message_handler(content_types = ["text"])
 	def convert(message: telebot.types.Message):
 		try:
-			amount = message.text
-			r = requests.get(f"https://min-api.cryptocompare.com/data/price?fsym={start_point}&tsyms={last_point}")
-			total_base = json.loads(r.content)[last_point]
-			text = f"Цена {amount} {start_point} в {last_point} - {total_base * int(amount)} {last_point}\n\nДля того чтобы начать сначала нажмите - /start"
-			bot.send_message(message.chat.id, text)
+			if message.text.isdigit() == True:
+				amount = message.text
+				r = requests.get(f"https://min-api.cryptocompare.com/data/price?fsym={start_point}&tsyms={last_point}")
+				total_base = json.loads(r.content)[last_point]
+				text = f"Цена {amount} {start_point} в {last_point} - {total_base * int(amount)} {last_point}\n\nДля того чтобы начать сначала нажмите - /start"
+				bot.send_message(message.chat.id, text)
+			else:
+				bot.send_message(message.chat.id, "Введите число\n\nИли нажмите на эту ссылку чтобы начать заново (если не выбрали валюты) - /start")
 		except KeyError or ValueError:
 			bot.send_message(message.chat.id, "Введите число\n\nИли нажмите на эту ссылку чтобы начать заново (если не выбрали валюты) - /start")
 		except requests.exceptions.ReadTimeout:
 			print("\n Переподключение к серверам \n")
 
-except requests.exceptions.ReadTimeout:
+except requests.exceptions.ReadTimeout or socket.timeout:
 	print("Переподключение к серверам заново")
 
 bot.polling(none_stop= True)
